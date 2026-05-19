@@ -7,7 +7,7 @@ Why
 Git raises merge conflict when changes happen on [adjacent lines](https://softwareengineering.stackexchange.com/a/311786)  
 While helpful for a source code, it is nonsensical for structured data files like json, where changes to different keys happen often and are isolated by definition
 
-Existing tools either don't do deep merge like weave, or fail to produce expected output. And bringing whole node.js/deno into a cicd worker for a ~100 loc js script is excessive
+Existing tools either don't do deep merge, or fail to produce expected output. And bringing whole node.js/deno into a cicd worker for a ~100 line js script is excessive
 
 Limitations
 -----------
