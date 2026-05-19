@@ -39,7 +39,7 @@ func mustEncode(t *testing.T, v interface{}) string {
 func TestMerge(t *testing.T) {
 	tests := []mergeTest{
 		{
-			name: "no changes",
+			name: "no changes | no conflict",
 			base: `{"a": 1}`,
 			ours: `{"a": 1}`,
 			theirs: `{"a": 1}`,
@@ -47,7 +47,7 @@ func TestMerge(t *testing.T) {
 			expectedConflict: false,
 		},
 		{
-			name: "only ours changed",
+			name: "only ours changed | no conflict",
 			base: `{"a": 1}`,
 			ours: `{"a": 2}`,
 			theirs: `{"a": 1}`,
@@ -55,7 +55,7 @@ func TestMerge(t *testing.T) {
 			expectedConflict: false,
 		},
 		{
-			name: "only theirs changed",
+			name: "only theirs changed | no conflict",
 			base: `{"a": 1}`,
 			ours: `{"a": 1}`,
 			theirs: `{"a": 2}`,
@@ -63,7 +63,7 @@ func TestMerge(t *testing.T) {
 			expectedConflict: false,
 		},
 		{
-			name: "scalar conflict",
+			name: "mutual change | conflict",
 			base: `{"a": 1}`,
 			ours: `{"a": 2}`,
 			theirs: `{"a": 3}`,
@@ -71,15 +71,7 @@ func TestMerge(t *testing.T) {
 			expectedConflict: true,
 		},
 		{
-			name: "nested map merge no conflict",
-			base: `{"a": {"b": 1}}`,
-			ours: `{"a": {"b": 1, "c": 2}}`,
-			theirs: `{"a": {"b": 1}}`,
-			expected: `{"a":{"b":1,"c":2}}`,
-			expectedConflict: false,
-		},
-		{
-			name: "type mismatch conflict",
+			name: "type mismatch | conflict",
 			base: `{"a": 1}`,
 			ours: `{"a": [1]}`,
 			theirs: `{"a": false}`,
@@ -87,11 +79,43 @@ func TestMerge(t *testing.T) {
 			expectedConflict: true,
 		},
 		{
-			name: "array length conflict",
+			name: "nested map merge | no conflict",
+			base: `{"a": {"b": 1}}`,
+			ours: `{"a": {"b": 1, "c": 2}}`,
+			theirs: `{"a": {"b": 1,"d": 3}}`,
+			expected: `{"a":{"b":1,"c":2,"d":3}}`,
+			expectedConflict: false,
+		},
+		{
+			name: "one sided changes | no conflict",
+			base: `{"a": [1, 2],"b": false}`,
+			ours: `{"a": [1, 2, 3],"b": false}`,
+			theirs: `{"a": [1, 2],"b": true}`,
+			expected: `{"a":[1,2,3],"b": true}`,
+			expectedConflict: false,
+		},
+		{
+			name: "two sided array expand | conflict",
 			base: `{"a": [1, 2]}`,
 			ours: `{"a": [1, 2, 3]}`,
-			theirs: `{"a": [1, 2, 3, 4]}`,
+			theirs: `{"a": [1, 2, 4]}`,
 			expected: `{"a":[1,2,3]}`,
+			expectedConflict: true,
+		},
+		{
+			name: "two sided array length change | conflict",
+			base: `{"a": [1, 2]}`,
+			ours: `{"a": [1, 2, 3]}`,
+			theirs: `{"a": [1]}`,
+			expected: `{"a":[1,2,3]}`,
+			expectedConflict: true,
+		},
+		{
+			name: "mutual array change | conflict",
+			base: `{"a": [1, 2]}`,
+			ours: `{"a": [1, 3]}`,
+			theirs: `{"a": [1, 4]}`,
+			expected: `{"a":[1,3]}`,
 			expectedConflict: true,
 		},
 	}
