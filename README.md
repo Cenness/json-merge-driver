@@ -12,7 +12,8 @@ Existing tools either don't do deep merge, or fail to produce expected output. A
 Limitations
 -----------
 
-Key order is not preserved
+Key order is not preserved  
+Arrays couldn't be merged
 
 How to use
 ----------
