@@ -13,7 +13,7 @@ Limitations
 -----------
 
 Key order is not preserved  
-Arrays couldn't be merged
+Arrays could not be merged
 
 How to use
 ----------
