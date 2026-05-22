@@ -103,15 +103,15 @@ func merge(base, ours, theirs interface{}) (interface{}, bool) {
 		return ours, true // Type mismatch → conflict
 	}
 
-	switch ours.(type) {
+	switch ours := ours.(type) {
 	case map[string]interface{}:
-		oursMap, theirsMap := ours.(map[string]interface{}), theirs.(map[string]interface{})
+		theirsMap := theirs.(map[string]interface{})
 		baseMap, _ := base.(map[string]interface{})
-		return mergeMaps(baseMap, oursMap, theirsMap)
+		return mergeMaps(baseMap, ours, theirsMap)
 	case []interface{}:
-		oursArr, theirsArr := ours.([]interface{}), theirs.([]interface{})
+		theirsArr := theirs.([]interface{})
 		baseArr, _ := base.([]interface{})
-		return mergeArrays(baseArr, oursArr, theirsArr)
+		return mergeArrays(baseArr, ours, theirsArr)
 	default:
 		// Scalars (string, number, bool, null)
 		if reflect.DeepEqual(ours, theirs) {
