@@ -115,7 +115,7 @@ func merge(base, ours, theirs interface{}) (interface{}, bool) {
 	default:
 		// Scalars (string, number, bool, null)
 		if reflect.DeepEqual(ours, theirs) {
-				return ours, false
+			return ours, false
 		}
 		return ours, true // Different values → conflict
 	}
