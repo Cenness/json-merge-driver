@@ -105,19 +105,13 @@ func merge(base, ours, theirs interface{}) (interface{}, bool) {
 
 	switch ours.(type) {
 	case map[string]interface{}:
-		theirsMap := theirs.(map[string]interface{})
-		var baseMap map[string]interface{}
-		if base != nil {
-				baseMap = base.(map[string]interface{})
-		}
-		return mergeMaps(baseMap, ours.(map[string]interface{}), theirsMap)
+		oursMap, theirsMap := ours.(map[string]interface{}), theirs.(map[string]interface{})
+		baseMap, _ := base.(map[string]interface{})
+		return mergeMaps(baseMap, oursMap, theirsMap)
 	case []interface{}:
-		theirsArr := theirs.([]interface{})
-		var baseArr []interface{}
-		if base != nil {
-				baseArr = base.([]interface{})
-		}
-		return mergeArrays(baseArr, ours.([]interface{}), theirsArr)
+		oursArr, theirsArr := ours.([]interface{}), theirs.([]interface{})
+		baseArr, _ := base.([]interface{})
+		return mergeArrays(baseArr, oursArr, theirsArr)
 	default:
 		// Scalars (string, number, bool, null)
 		if reflect.DeepEqual(ours, theirs) {
